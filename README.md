@@ -85,3 +85,9 @@
         ]
     }
     ```
+### Website Preview
+
+Here is a preview of the website:
+
+![Website Screenshot](![BeFunky-collage](https://github.com/user-attachments/assets/3edfa15c-3fef-483e-8217-6e63744a2623)
+)
