@@ -61,3 +61,27 @@
     ```bash
     composer require aws/aws-sdk-php
     ```
+    **Attach the following policies to the EC2 instance role:**
+
+    - `AmazonS3FullAccess`
+    - `AmazonRekognitionFullAccess`
+  ### Configure Bucket Policy
+
+1. **Set the following bucket policy for your S3 bucket (`recognitonbucket`):**
+
+    ```json
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Principal": "*",
+                "Action": [
+                    "s3:GetObject",
+                    "s3:PutObject"
+                ],
+                "Resource": "arn:aws:s3:::recognitonbucket/*"
+            }
+        ]
+    }
+    ```
