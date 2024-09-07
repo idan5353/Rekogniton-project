@@ -89,5 +89,5 @@
 
 Here is a preview of the website:
 
-![Website Screenshot](![BeFunky-collage](https://github.com/user-attachments/assets/3edfa15c-3fef-483e-8217-6e63744a2623)
-)
+![BeFunky-collage](https://github.com/user-attachments/assets/3cf4bff8-f65e-49af-9fd2-3c7271f73f3e)
+
