@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animal Image Upload and Analysis</title>
+    <!-- Basic Styling -->
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        .header {
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #007bff;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            color: #333;
+        }
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-bottom: 30px; /* Space between the button and the image */
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e9f5f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        img {
+            width: 400px; /* Fixed width for images */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 8px;
+            margin-bottom: 20px; /* Space between image and text */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .alert {
+            color: #d9534f;
+            font-size: 1rem;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #f8d7da;
+            margin-bottom: 20px;
+        }
+        #spinner {
+            display: none;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            Animal Image Upload & Analysis
+        </div>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <label for="photo" class="form-label">Choose an image to upload:</label>
+            <input type="file" name="photo" id="photo" class="form-control" accept="image/*" required>
+            <button type="submit" class="btn-primary">Upload Image</button>
+        </form>
+
+        <!-- Spinner for loading indication -->
+        <div id="spinner" class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+
+        <div id="results"></div>
+    </div>
+
+    <!-- Basic JS for form submission -->
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            let formData = new FormData(this);
+            document.getElementById('spinner').style.display = 'block';
+
+            fetch('upload.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = ''; // Clear previous results
+
+                if (data.error) {
+                    resultsDiv.innerHTML = `<div class="alert">${data.error}</div>`;
+                } else {
+                    if (data.imageUrl) {
+                        const img = document.createElement('img');
+                        img.src = data.imageUrl;
+                        img.alt = 'Uploaded Image';
+                        resultsDiv.appendChild(img);
+                    }
+
+                    if (data.labels) {
+                        const labels = document.createElement('div');
+                        labels.className = 'result';
+                        data.labels.forEach(label => {
+                            const p = document.createElement('p');
+                            p.textContent = `Label: ${label.Name} - Confidence: ${label.Confidence.toFixed(2)}%`;
+                            labels.appendChild(p);
+                        });
+                        resultsDiv.appendChild(labels);
+                    }
+                }
+
+                document.getElementById('spinner').style.display = 'none';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('spinner').style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
